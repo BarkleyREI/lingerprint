@@ -16,7 +16,8 @@
   "main": "",
   "files": [],
   "scripts": {
-    "build": "webpack --progress --watch"
+    "build": "webpack --progress",
+    "watch": "webpack --progress --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",

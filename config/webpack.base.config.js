@@ -10,7 +10,7 @@ module.exports = (env) => {
   const { PLATFORM, VERSION } = env;
   return merge([
     {
-      entry: path.join(SRC_DIR, 'linger.js'),
+      entry: path.join(SRC_DIR, 'app.js'),
       devtool: 'source-map',
       module: {
         rules: [

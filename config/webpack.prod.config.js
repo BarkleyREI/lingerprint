@@ -1,3 +1,4 @@
+/* eslint-disable */
 const merge = require('webpack-merge');
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');

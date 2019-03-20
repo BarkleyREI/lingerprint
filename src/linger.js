@@ -1,5 +1,5 @@
 import * as murmor3 from './murmor_hash';
-import each from './utils';
+import { each, extendSoft } from './utils';
 
 export function Linger() {
   const MODULE_VERSION = '1.0.0';
@@ -15,6 +15,7 @@ export function Linger() {
     // get enumerated devices from browser
     enumerateDevices = function (done, options) {
       options = options || this.options;
+      extendSoft(options, defaultOptions);
       if (!this.deviceEnumerationSupported()) {
         return done(option.MSG_NOT_AVAILABLE);
       }

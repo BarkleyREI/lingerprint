@@ -4,4 +4,5 @@ import Linger from './linger';
 const fingerprint = new Linger();
 
 console.info(fingerprint);
-fingerprint.enumerateDevices(c => console.table(c))
+fingerprint.enumerateDevices(c => console.table(c));
+fingerprint.audioKey(c => console.log(c));

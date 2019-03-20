@@ -1,7 +1,10 @@
 export default function Linger() {
   const MODULE_VERSION = '1.0.0';
   const Fingerprinter = class Fingerprinter {
+    
     constructor(options) {
+      this.options = options;
+
       this.VERSION = MODULE_VERSION;
       this.x64Add = this.x64Add.bind(this);
       this.x64Multiply = this.x64Multiply.bind(this);
@@ -204,15 +207,24 @@ export default function Linger() {
               .toString(16)).slice(-8);
     }
 
+
+    // get enumerated devices from browser
     enumerateDevices = function (done, options) {
+      options = options || this.options;
       if (!this.deviceEnumerationSupported()) {
         return done(option.NOT_AVAILABLE);
       }
       navigator.mediaDevices.enumerateDevices().then(function (devices) {
         done(devices.map(function (device) {
-          return 'id=' + device.deviceId + ';gid=' + device.groupId + ';' + device.kind + ';' + device.label;
+          //return 'id=' + device.deviceId + ';gid=' + device.groupId + ';' + device.kind + ';' + device.label;
+          return {
+            id: device.deviceId,
+            group: device.groupId,
+            kind: device.kind,
+            label: device.label
+          };
         }));
-      }).catch(function(err){
+      }).catch(function (err) {
         done(err);
       });
     }
@@ -220,6 +232,73 @@ export default function Linger() {
     deviceEnumerationSupported = () => {
       return (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices);
     }
+
+    //build audio device fingerprint
+    audioKey = function (done, options) {
+      options = options || this.options;
+      var opts = options.audio;
+      if (opts.exludeIOS11 && navigator.userAgent.match(/OS 11.+Version\/11.+Safari/)) {
+        return done(options.EXCLUDED);
+      }
+
+      const audioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      if (audioContext == null) {
+        return done(options.NOT_AVAILABLE);
+      }
+
+      const context = new audioContext(1, 44100, 44100);
+      let oscillator = context.createOscillator();
+      oscillator.type = 'triangle';
+      oscillator.frequency.setValueAtTime(10000, context.currentTime);
+
+      let compressor = context.createDynamicsCompressor();
+      ([
+        ['threshold', -50],
+        ['knee', 40],
+        ['ratio', 12],
+        ['reduction', -20],
+        ['attack', 0],
+        ['release', 0.25]
+      ]).forEach(item => {
+        if (compressor[item[0]] !== undefined && typeof compressor[item[0]].setValueAtTime === 'function') {
+          compressor[item[0]].setValueAtTime(item[1], context.currentTime);
+        }
+      });
+
+      oscillator.connect(compressor);
+      compressor.connect(context.destination);
+      oscillator.start(0);
+      context.startRendering();
+
+      let timeoutId = setTimeout(function () {
+        context.oncomplete = function () {
+
+        };
+        context = null;
+        return done('audioTimeout')
+      }, opts.timeout);
+
+      context.oncomplete = function (event) {
+        var fingerprint;
+        try {
+          clearTimeout(timeoutId);
+          fingerprint = event.renderedBuffer
+            .getChannelData(0)
+            .slice(4500, 5000)
+            .reduce(function (acc, val) {
+              return acc + Math.abs(val)
+            }, 0).toString();
+          oscillator.disconnect();
+          compressor.disconnect();
+        } catch (error) {
+          done(error);
+          return;
+        }
+        done(fingerprint);
+      }
+    }
+
+
 
   };
 

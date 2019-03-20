@@ -1,8 +1,17 @@
 {
   "extends": "airbnb",
   "rules": {
-    "func-names": ["error", "never"],
+    "func-names": [
+      "error",
+      "never"
+    ],
     "linebreak-style": "off",
-    "comma-dangle": "warn"
+    "comma-dangle": "warn",
+    "max-len": [
+      "warn",
+      {
+        "code": 512
+      }
+    ]
   }
 }

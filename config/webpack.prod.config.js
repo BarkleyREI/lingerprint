@@ -9,16 +9,6 @@ const prodConfig = env => merge([
   {
     devtool: 'source-map',
     optimization: {
-      runtimeChunk: 'single',
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      },
       minimizer: [
         new UglifyJsPlugin({
           sourceMap: true,

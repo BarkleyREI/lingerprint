@@ -98,8 +98,7 @@ export function x64Xor(m, n) { return [m[0] ^ n[0], m[1] ^ n[1]]; }
  *  Given a block, returns murmurHash3's final x64 mix of that block.
  * (`[0, h[0] >>> 1]` is a 33 bit unsigned right shift. This is the only place where we need to right shift 64bit ints.)
  */
-export function x64Fmix(m, n) {
-  let h = null;
+export function x64Fmix(h) {
   h = x64Xor(h, [0, h[0] >>> 1]);
   h = x64Multiply(h, [0xff51afd7, 0xed558ccd]);
   h = x64Xor(h, [0, h[0] >>> 1]);

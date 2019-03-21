@@ -16,17 +16,23 @@ export function each(obj, iterator) {
   }
 }
 
-export function extendSoft(target, source) {
-  if (source == null) { return target; }
-  let value;
-  let key;
+/**
+ * Gather an array of key/value for all properties within an object
+ * @param {Object} obj - The object to explore.
+ * @param {string[]} ignoreProps - An array pf property names to exclude from the result.
+ */
+export function spelunkObject(obj, ignoreProps) {
+  const kv = [];
   // eslint-disable-next-line guard-for-in
-  for (key in source) {
-    value = source[key];
-    if (value != null && !(Object.prototype.hasOwnProperty.call(target, key))) {
-      // eslint-disable-next-line no-param-reassign
-      target[key] = value;
+  for (const prop in obj) {
+    // eslint-disable-next-line no-empty
+    if (ignoreProps.indexOf(prop) > -1) {
+    } else {
+      kv.push({
+        key: prop,
+        value: obj[prop],
+      });
     }
   }
-  return target;
+  return kv;
 }

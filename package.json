@@ -14,7 +14,9 @@
   },
   "homepage": "https://github.com/risadams/lingerjs",
   "main": "",
-  "files": [],
+  "files": [
+    "dist/linger.js"
+  ],
   "scripts": {
     "build": "webpack --config config/webpack.base.config.js --progress --mode development --env.PLATFORM=local --env.VERSION=dev --display-error-details",
     "release": "webpack --config config/webpack.prod.config.js --progress --mode production --env.PLATFORM=production --env.VERSION=production --display-error-details",
@@ -39,11 +41,5 @@
     "webpack-cli": "^3.3.0",
     "webpack-merge": "^4.2.1",
     "webpack-visualizer-plugin": "^0.1.11"
-  },
-  "standard": {
-    "ignore": [
-      "specs/lib",
-      "specs/phantomjs-testrunner.js"
-    ]
   }
 }

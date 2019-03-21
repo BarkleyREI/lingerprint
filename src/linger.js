@@ -1,5 +1,5 @@
 import * as murmor3 from './murmor_hash';
-import { each, extendSoft } from './utils';
+import { each, spelunkObject } from './utils';
 
 export function Linger() {
   const MODULE_VERSION = '1.0.0';
@@ -10,12 +10,100 @@ export function Linger() {
 
       this.VERSION = MODULE_VERSION;
       this.HASH = murmor3;
+
+      this.HashedComponents = [];
+      this.Components = [
+        { key: 'adBlocker', value: null },
+        { key: 'addBehavior', value: null },
+        { key: 'audio', value: null },
+        { key: 'availableScreenResolution', value: null },
+        { key: 'canvas', value: null },
+        { key: 'colorDepth', value: null },
+        { key: 'cpuClass', value: null },
+        { key: 'deviceMemory', value: null },
+        { key: 'doNotTrack', value: null },
+        { key: 'enumeratedDevices', value: null },
+        { key: 'hardwareConcurrency', value: null },
+        { key: 'indexedDb', value: null },
+        { key: 'language', value: null },
+        { key: 'liedBrowser', value: null },
+        { key: 'liedLanguages', value: null },
+        { key: 'liedOs', value: null },
+        { key: 'liedResolution', value: null },
+        { key: 'localStorage', value: null },
+        { key: 'navigator', value: null },
+        { key: 'network', value: null },
+        { key: 'openDatabase', value: null },
+        { key: 'pixelRatio', value: null },
+        { key: 'platform', value: null },
+        { key: 'screenResolution', value: null },
+        { key: 'sessionStorage', value: null },
+        { key: 'timeZone', value: null },
+        { key: 'timeZoneOffset', value: null },
+        { key: 'touchSupport', value: null },
+        { key: 'userAgent', value: null },
+        { key: 'webdriver', value: null },
+        { key: 'webgl', value: null },
+        { key: 'webglVendor', value: null },
+      ];
+
+      this.adBlocker(v => this.updateComponent('adBlocker', v));
+      this.addBehavior(v => this.updateComponent('addBehavior', v));
+      this.audio(v => this.updateComponent('audio', v));
+      this.availableScreenResolution(v => this.updateComponent('availableScreenResolution', v));
+      this.canvas(v => this.updateComponent('canvas', v));
+      this.colorDepth(v => this.updateComponent('colorDepth', v));
+      this.cpuClass(v => this.updateComponent('cpuClass', v));
+      this.deviceMemory(v => this.updateComponent('deviceMemory', v));
+      this.doNotTrack(v => this.updateComponent('doNotTrack', v));
+      this.enumerateDevices(v => this.updateComponent('enumeratedDevices', v));
+      this.hardwareConcurrency(v => this.updateComponent('hardwareConcurrency', v));
+      this.indexedDb(v => this.updateComponent('indexedDb', v));
+      this.language(v => this.updateComponent('language', v));
+      this.liedBrowser(v => this.updateComponent('liedBrowser', v));
+      this.liedLanguages(v => this.updateComponent('liedLanguages', v));
+      this.liedOs(v => this.updateComponent('liedOs', v));
+      this.liedResolution(v => this.updateComponent('liedResolution', v));
+      this.localStorage(v => this.updateComponent('localStorage', v));
+      this.navigator(v => this.updateComponent('navigator', v));
+      this.network(v => this.updateComponent('network', v));
+      this.openDatabase(v => this.updateComponent('openDatabase', v));
+      this.pixelRatio(v => this.updateComponent('pixelRatio', v));
+      this.platform(v => this.updateComponent('platform', v));
+      this.screenResolution(v => this.updateComponent('screenResolution', v));
+      this.sessionStorage(v => this.updateComponent('sessionStorage', v));
+      this.timeZone(v => this.updateComponent('timeZone', v));
+      this.timeZoneOffset(v => this.updateComponent('timeZoneOffset', v));
+      this.touchSupport(v => this.updateComponent('touchSupport', v));
+      this.userAgent(v => this.updateComponent('userAgent', v));
+      this.webDriver(v => this.updateComponent('webdriver', v));
+      this.webGl(v => this.updateComponent('webgl', v));
+      this.webGlVendor(v => this.updateComponent('webglVendor', v));
+
+      setTimeout(() => {
+        this.Components.map(c => this.HashedComponents.push(this.hashComponent(c)));
+        this.Fingerprint = this.HashedComponents.join('✨');
+      }, 1);
+    }
+
+    hashComponent = function (c) {
+      const value = JSON.stringify(c.value);
+      const key = c.key + '~' + value;
+      return murmor3.x64Hash128(key, 31);
+    }
+
+    updateComponent = function (k, v) {
+      const keyComps = x => Object.keys(x).map(xk => x[xk]);
+      const filter = this.Components.filter(x => keyComps(x).indexOf(k) > -1);
+      if (filter !== undefined) {
+        let fk = filter[0];
+        fk.value = v;
+      }
     }
 
     // get enumerated devices from browser
     enumerateDevices = function (done, options) {
       options = options || this.options;
-      extendSoft(options, defaultOptions);
       if (!this.deviceEnumerationSupported()) {
         return done(option.MSG_NOT_AVAILABLE);
       }
@@ -37,7 +125,7 @@ export function Linger() {
     deviceEnumerationSupported = () => (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices);
 
     //build audio device fingerprint
-    audioKey = function (done, options) {
+    audio = function (done, options) {
       options = options || this.options;
       var opts = options.audio;
       if (opts.exludeIOS11 && navigator.userAgent.match(/OS 11.+Version\/11.+Safari/)) {
@@ -103,12 +191,49 @@ export function Linger() {
 
     userAgent = (done) => done(navigator.userAgent);
 
+    navigator = (done) => done(spelunkObject(navigator, [
+      // these properties should be explicitly ignored, so as to not prompt for user interaction, 
+      // or because they provide useless information (battery state is too fluxible for identity )
+      // or because they are explicitly tracked elsewhere
+      'battery',
+      'browserLanguage',
+      'clipboard',
+      'cpuClass',
+      'credentials',
+      'deviceMemory',
+      'doNotTrack',
+      'geolocation',
+      'getBattery',
+      'getGamePads',
+      'getUserMedia',
+      'hardwareConcurrency',
+      'language',
+      'languages',
+      'locks',
+      'maxTouchPoints',
+      'msDoNotTrack',
+      'onLine',
+      'permissions',
+      'platform',
+      'registerProtocolHandler',
+      'requestMIDIAccess',
+      'requestMediaKeySystemAccess',
+      'serviceWorker',
+      'storage',
+      'systemLanguage',
+      'unregisterProtocolHandler',
+      'userAgent',
+      'userLanguage',
+      'webdriver',
+      'webkitGetUserMedia',
+    ]));
+
     webDriver = (done, options) => {
       options = options || this.options;
       return done(navigator.webdriver == null ? options.MSG_NOT_AVAILABLE : navigator.webdriver);
     };
 
-    languageKey = (done, options) => {
+    language = (done, options) => {
       options = options || this.options;
       return done(navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage || options.MSG_NOT_AVAILABLE);
     }
@@ -243,6 +368,25 @@ export function Linger() {
     doNotTrack = (done, options) => {
       options = options || this.options;
       return done(this.getDoNotTrack(options));
+    }
+
+    network = (done, options) => {
+      options = options || this.options;
+      return done(this.getNetworkInfo(options));
+    }
+
+    getNetworkInfo = function (options) {
+      const info = navigator.connection;
+      if (info !== undefined) {
+        return ({
+          downlink: info.downlink || "unknown",
+          downlinkMax: info.downlinkMax || info.downlink || "unknown",
+          effectiveType: info.effectiveType || "unknown",
+          rtt: info.rtt || "unknown",
+          type: info.type || "unknown"
+        });
+      }
+      return done(options.MSG_NOT_AVAILABLE);
     }
 
     getDoNotTrack = function (options) {
@@ -670,7 +814,6 @@ export function Linger() {
   /***********************************************************************************************/
 
   const defaultOptions = {
-    prepocessor: null,
     audio: {
       timeout: 1000,
       // On iOS 11, audio context can only be used in response to user interaction.
@@ -682,17 +825,6 @@ export function Linger() {
     },
     screen: {
       detectScreenOrientation: true,
-    },
-    plugins: {
-      sortPluginsFor: [],
-      excludeIE: false,
-    },
-    extraComponents: [],
-    exludes: {
-      'enumerateDevices': true, //unreliable on windows
-      'pixelRatio': true, // depends on browser zoom which is not possible to detect
-      'doNotTrack': true, // depends on incognito mode, which is not possible to detect
-      'fontsFlash': true, // use js, not SWF for fonts
     },
     MSG_NOT_AVAILABLE: 'not available',
     MSG_ERROR: 'error',

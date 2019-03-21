@@ -4,6 +4,6 @@ import { Lingerprint } from './lingerprint';
 const lingerprint = new Lingerprint();
 
 setTimeout(() => {
-  console.table(lingerprint.Components);
-  console.info(lingerprint.Fingerprint);
+  // eslint-disable-next-line no-undef
+  window.Lingerprint = lingerprint;
 }, 10);

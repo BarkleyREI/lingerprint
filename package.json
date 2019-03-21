@@ -1,16 +1,16 @@
 {
   "name": "lingerprint",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A drop-in API for creating a pseudo-unique browser fingerprint for lightweight visitor analytics.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/risadams/lingerprintjs.git"
+    "url": "https://github.com/risadams/lingerprint.git"
   },
   "keywords": [],
   "author": "Ris Adams",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/risadams/lingerprintjs/issues"
+    "url": "https://github.com/risadams/lingerprint/issues"
   },
   "homepage": "https://github.com/risadams/lingerprint",
   "main": "",

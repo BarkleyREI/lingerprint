@@ -13,7 +13,6 @@ export function Linger() {
 
       this.HashedComponents = [];
       this.Components = [
-        { key: 'adBlocker', value: null },
         { key: 'addBehavior', value: null },
         { key: 'audio', value: null },
         { key: 'availableScreenResolution', value: null },
@@ -47,7 +46,6 @@ export function Linger() {
         { key: 'webglVendor', value: null },
       ];
 
-      this.adBlocker(v => this.updateComponent('adBlocker', v));
       this.addBehavior(v => this.updateComponent('addBehavior', v));
       this.audio(v => this.updateComponent('audio', v));
       this.availableScreenResolution(v => this.updateComponent('availableScreenResolution', v));
@@ -102,13 +100,13 @@ export function Linger() {
     }
 
     // get enumerated devices from browser
-    enumerateDevices = function (done, options) {
+    enumerateDevices = function (processValue, options) {
       options = options || this.options;
       if (!this.deviceEnumerationSupported()) {
-        return done(option.MSG_NOT_AVAILABLE);
+        return processValue(option.MSG_NOT_AVAILABLE);
       }
       navigator.mediaDevices.enumerateDevices().then(function (devices) {
-        done(devices.map(function (device) {
+        processValue(devices.map(function (device) {
           //return 'id=' + device.deviceId + ';gid=' + device.groupId + ';' + device.kind + ';' + device.label;
           return {
             id: device.deviceId,
@@ -118,23 +116,23 @@ export function Linger() {
           };
         }));
       }).catch(function (err) {
-        done(err);
+        processValue(err);
       });
     }
 
     deviceEnumerationSupported = () => (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices);
 
     //build audio device fingerprint
-    audio = function (done, options) {
+    audio = function (processValue, options) {
       options = options || this.options;
       var opts = options.audio;
       if (opts.exludeIOS11 && navigator.userAgent.match(/OS 11.+Version\/11.+Safari/)) {
-        return done(options.MSG_EXCLUDED);
+        return processValue(options.MSG_EXCLUDED);
       }
 
       const audioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
       if (audioContext == null) {
-        return done(options.MSG_NOT_AVAILABLE);
+        return processValue(options.MSG_NOT_AVAILABLE);
       }
 
       const context = new audioContext(1, 44100, 44100);
@@ -166,7 +164,7 @@ export function Linger() {
 
         };
         context = null;
-        return done('audioTimeout')
+        return processValue('audioTimeout')
       }, opts.timeout);
 
       context.oncomplete = function (event) {
@@ -182,16 +180,16 @@ export function Linger() {
           oscillator.disconnect();
           compressor.disconnect();
         } catch (error) {
-          done(error);
+          processValue(error);
           return;
         }
-        done(fingerprint);
+        processValue(fingerprint);
       }
     }
 
-    userAgent = (done) => done(navigator.userAgent);
+    userAgent = (processValue) => processValue(navigator.userAgent);
 
-    navigator = (done) => done(spelunkObject(navigator, [
+    navigator = (processValue) => processValue(spelunkObject(navigator, [
       // these properties should be explicitly ignored, so as to not prompt for user interaction, 
       // or because they provide useless information (battery state is too fluxible for identity )
       // or because they are explicitly tracked elsewhere
@@ -228,44 +226,44 @@ export function Linger() {
       'webkitGetUserMedia',
     ]));
 
-    webDriver = (done, options) => {
+    webDriver = (processValue, options) => {
       options = options || this.options;
-      return done(navigator.webdriver == null ? options.MSG_NOT_AVAILABLE : navigator.webdriver);
+      return processValue(navigator.webdriver == null ? options.MSG_NOT_AVAILABLE : navigator.webdriver);
     };
 
-    language = (done, options) => {
+    language = (processValue, options) => {
       options = options || this.options;
-      return done(navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage || options.MSG_NOT_AVAILABLE);
+      return processValue(navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage || options.MSG_NOT_AVAILABLE);
     }
 
-    colorDepth = (done, options) => {
+    colorDepth = (processValue, options) => {
       options = options || this.options;
-      return done(window.screen.colorDepth || options.MSG_NOT_AVAILABLE);
+      return processValue(window.screen.colorDepth || options.MSG_NOT_AVAILABLE);
     }
 
-    deviceMemory = (done, options) => {
+    deviceMemory = (processValue, options) => {
       options = options || this.options;
-      return done(navigator.deviceMemory || options.MSG_NOT_AVAILABLE);
+      return processValue(navigator.deviceMemory || options.MSG_NOT_AVAILABLE);
     }
 
-    pixelRatio = (done, options) => {
+    pixelRatio = (processValue, options) => {
       options = options || this.options;
-      return done(window.devicePixelRatio || options.MSG_NOT_AVAILABLE);
+      return processValue(window.devicePixelRatio || options.MSG_NOT_AVAILABLE);
     }
 
-    screenResolution = (done, options) => {
+    screenResolution = (processValue, options) => {
       options = options || this.options;
-      return done(this.getScreenResolution(options));
+      return processValue(this.getScreenResolution(options));
     }
 
-    availableScreenResolution = (done, options) => {
+    availableScreenResolution = (processValue, options) => {
       options = options || this.options;
-      return done(this.getAllAvailableScreenResolutions(options));
+      return processValue(this.getAllAvailableScreenResolutions(options));
     }
 
-    hardwareConcurrency = (done, options) => {
+    hardwareConcurrency = (processValue, options) => {
       options = options || this.options;
-      return done(this.getHardwareConcurrency(options));
+      return processValue(this.getHardwareConcurrency(options));
     }
 
     getHardwareConcurrency = function (options) {
@@ -294,22 +292,22 @@ export function Linger() {
       return options.MSG_NOT_AVAILABLE;
     }
 
-    timeZoneOffset = (done) => done(new Date().getTimezoneOffset());
+    timeZoneOffset = (processValue) => processValue(new Date().getTimezoneOffset());
 
-    timeZone = (done, options) => {
+    timeZone = (processValue, options) => {
       options = options || this.options;
       if (window.Intl && window.Intl.DateTimeFormat) {
-        done(new window.Intl.DateTimeFormat().resolvedOptions().timeZone);
+        processValue(new window.Intl.DateTimeFormat().resolvedOptions().timeZone);
         return;
       }
-      done(options.MSG_NOT_AVAILABLE);
+      processValue(options.MSG_NOT_AVAILABLE);
     }
 
 
 
-    sessionStorage = (done, options) => {
+    sessionStorage = (processValue, options) => {
       options = options || this.options;
-      return done(this.hasSessionStorage(options));
+      return processValue(this.hasSessionStorage(options));
     }
 
     hasSessionStorage = function (options) {
@@ -320,9 +318,9 @@ export function Linger() {
       }
     }
 
-    localStorage = (done, options) => {
+    localStorage = (processValue, options) => {
       options = options || this.options;
-      return done(this.hasLocalStorage(options));
+      return processValue(this.hasLocalStorage(options));
     }
 
     hasLocalStorage = function (options) {
@@ -333,9 +331,9 @@ export function Linger() {
       }
     }
 
-    indexedDb = (done, options) => {
+    indexedDb = (processValue, options) => {
       options = options || this.options;
-      return done(this.hasIndexedDb(options));
+      return processValue(this.hasIndexedDb(options));
     }
 
     hasIndexedDb = function (options) {
@@ -346,16 +344,16 @@ export function Linger() {
       }
     }
 
-    cpuClass = (done, options) => {
+    cpuClass = (processValue, options) => {
       options = options || this.options;
-      return done(this.getNavigatorCpuClass(options));
+      return processValue(this.getNavigatorCpuClass(options));
     }
 
     getNavigatorCpuClass = (options) => { return navigator.cpuClass || options.MSG_NOT_AVAILABLE }
 
-    platform = (done, options) => {
+    platform = (processValue, options) => {
       options = options || this.options;
-      return done(this.getNavigatorPlatform(options));
+      return processValue(this.getNavigatorPlatform(options));
     }
 
     getNavigatorPlatform = function (options) {
@@ -365,14 +363,14 @@ export function Linger() {
       return options.MSG_NOT_AVAILABLE;
     }
 
-    doNotTrack = (done, options) => {
+    doNotTrack = (processValue, options) => {
       options = options || this.options;
-      return done(this.getDoNotTrack(options));
+      return processValue(this.getDoNotTrack(options));
     }
 
-    network = (done, options) => {
+    network = (processValue, options) => {
       options = options || this.options;
-      return done(this.getNetworkInfo(options));
+      return processValue(this.getNetworkInfo(options));
     }
 
     getNetworkInfo = function (options) {
@@ -386,7 +384,7 @@ export function Linger() {
           type: info.type || "unknown"
         });
       }
-      return done(options.MSG_NOT_AVAILABLE);
+      return processValue(options.MSG_NOT_AVAILABLE);
     }
 
     getDoNotTrack = function (options) {
@@ -402,12 +400,12 @@ export function Linger() {
       return options.MSG_NOT_AVAILABLE;
     }
 
-    canvas = (done, options) => {
+    canvas = (processValue, options) => {
       options = options || this.options;
       if (this.isCanvasSupported()) {
-        return done(getCanvas(options));
+        return processValue(getCanvas(options));
       }
-      done(options.MSG_NOT_AVAILABLE);
+      processValue(options.MSG_NOT_AVAILABLE);
     }
 
     isCanvasSupported = function () {
@@ -415,12 +413,12 @@ export function Linger() {
       return !!(elem.getContext && elem.getContext('2d'));
     }
 
-    webGl = (done, options) => {
+    webGl = (processValue, options) => {
       options = options || this.options;
       if (this.isWebGlSupported()) {
-        return done(getWebGl(options));
+        return processValue(getWebGl(options));
       }
-      done(options.MSG_NOT_AVAILABLE);
+      processValue(options.MSG_NOT_AVAILABLE);
     }
 
     isWebGlSupported = function () {
@@ -432,22 +430,21 @@ export function Linger() {
       return !!window.WebGLRenderingContext && !!glContext;
     }
 
-    webGlVendor = (done, options) => {
+    webGlVendor = (processValue, options) => {
       options = options || this.options;
       if (this.isWebGlSupported()) {
-        return done(getWebGlVendor(options));
+        return processValue(getWebGlVendor(options));
       }
-      done(options.MSG_NOT_AVAILABLE);
+      processValue(options.MSG_NOT_AVAILABLE);
     }
 
-    addBehavior = (done) => done(!!(document.body && document.body.addBehavior));
-    openDatabase = (done) => done(!!(window.openDatabase));
-    adBlocker = (done) => done(getAdBlocker());
-    liedLanguages = (done) => done(getHasLiedLanguages());
-    liedResolution = (done) => done(getHasLiedResolution());
-    liedOs = (done) => done(getHasLiedOs());
-    liedBrowser = (done) => done(getHasLiedBrowser());
-    touchSupport = (done) => done(getTouchSupport());
+    addBehavior = (processValue) => processValue(!!(document.body && document.body.addBehavior));
+    openDatabase = (processValue) => processValue(!!(window.openDatabase));
+    liedLanguages = (processValue) => processValue(getHasLiedLanguages());
+    liedResolution = (processValue) => processValue(getHasLiedResolution());
+    liedOs = (processValue) => processValue(getHasLiedOs());
+    liedBrowser = (processValue) => processValue(getHasLiedBrowser());
+    touchSupport = (processValue) => processValue(getTouchSupport());
   };
 
 
@@ -664,23 +661,6 @@ export function Linger() {
       return null;
     }
   }
-
-  var getAdBlocker = function () {
-    var ads = document.createElement('div');
-    ads.innerHTML = '&nbsp;';
-    ads.className = 'adsbox';
-    var result = false;
-    try {
-      // body may not exist, that's why we need try/catch
-      document.body.appendChild(ads);
-      result = document.getElementsByClassName('adsbox')[0].offsetHeight === 0;
-      document.body.removeChild(ads);
-    } catch (e) {
-      result = false;
-    }
-    return result;
-  }
-
 
   var getHasLiedLanguages = function () {
     // We check if navigator.language is equal to the first language of navigator.languages

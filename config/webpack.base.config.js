@@ -24,7 +24,7 @@ module.exports = (env) => {
         ],
       },
       output: {
-        filename: 'linger.js',
+        filename: 'lingerprint.js',
         path: DST_DIR,
       },
       plugins: [

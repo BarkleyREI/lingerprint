@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import { Linger } from './linger';
+import { Lingerprint } from './lingerprint';
 
-const fingerprint = new Linger();
+const lingerprint = new Lingerprint();
 
 setTimeout(() => {
-  console.table(fingerprint.Components);
-  console.info(fingerprint.Fingerprint);
+  console.table(lingerprint.Components);
+  console.info(lingerprint.Fingerprint);
 }, 10);

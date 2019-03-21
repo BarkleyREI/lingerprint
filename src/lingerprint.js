@@ -1,7 +1,7 @@
 import * as murmor3 from './murmor_hash';
 import { each, map, spelunkObject } from './utils';
 
-export function Linger() {
+export function Lingerprint() {
   const MODULE_VERSION = '1.0.0';
   const Fingerprinter = class Fingerprinter {
 

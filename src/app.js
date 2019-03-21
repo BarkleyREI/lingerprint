@@ -5,6 +5,5 @@ const fingerprint = new Linger();
 
 setTimeout(() => {
   console.table(fingerprint.Components);
-  console.info(fingerprint.HashedComponents);
   console.info(fingerprint.Fingerprint);
 }, 10);

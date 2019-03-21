@@ -36,3 +36,15 @@ export function spelunkObject(obj, ignoreProps) {
   }
   return kv;
 }
+
+export function map(obj, iterator) {
+  const results = [];
+  // Not using strict equality so that this acts as a
+  // shortcut to checking for `null` and `undefined`.
+  if (obj == null) {
+    return results;
+  }
+  if (Array.prototype.map && obj.map === Array.prototype.map) { return obj.map(iterator); }
+  each(obj, (value, index, list) => results.push(iterator(value, index, list)));
+  return results;
+}

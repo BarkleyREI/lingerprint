@@ -370,10 +370,10 @@ export function Linger() {
 
     network = (processValue, options) => {
       options = options || this.options;
-      return processValue(this.getNetworkInfo(options));
+      return processValue(this.getNetworkInfo(processValue, options));
     }
 
-    getNetworkInfo = function (options) {
+    getNetworkInfo = function (processValue, options) {
       const info = navigator.connection;
       if (info !== undefined) {
         return ({
@@ -590,43 +590,43 @@ export function Linger() {
     gl.uniform2f(program.offsetUniform, 1, 1);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);
     try {
-      result.push(gl.canvas.toDataURL());
+      result.push({ key: 'render', value: gl.canvas.toDataURL() });
     } catch (e) {
       ;/* .toDataURL may be absent or broken (blocked by extension) */
     }
-    result.push('extensions:' + (gl.getSupportedExtensions() || []).join(';'));
-    result.push('webgl aliased line width range:' + fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)));
-    result.push('webgl aliased point size range:' + fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)));
-    result.push('webgl alpha bits:' + gl.getParameter(gl.ALPHA_BITS));
-    result.push('webgl antialiasing:' + (gl.getContextAttributes().antialias ? 'yes' : 'no'));
-    result.push('webgl blue bits:' + gl.getParameter(gl.BLUE_BITS));
-    result.push('webgl depth bits:' + gl.getParameter(gl.DEPTH_BITS));
-    result.push('webgl green bits:' + gl.getParameter(gl.GREEN_BITS));
-    result.push('webgl max anisotropy:' + maxAnisotropy(gl));
-    result.push('webgl max combined texture image units:' + gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS));
-    result.push('webgl max cube map texture size:' + gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE));
-    result.push('webgl max fragment uniform vectors:' + gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS));
-    result.push('webgl max render buffer size:' + gl.getParameter(gl.MAX_RENDERBUFFER_SIZE));
-    result.push('webgl max texture image units:' + gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS));
-    result.push('webgl max texture size:' + gl.getParameter(gl.MAX_TEXTURE_SIZE));
-    result.push('webgl max varying vectors:' + gl.getParameter(gl.MAX_VARYING_VECTORS));
-    result.push('webgl max vertex attribs:' + gl.getParameter(gl.MAX_VERTEX_ATTRIBS));
-    result.push('webgl max vertex texture image units:' + gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS));
-    result.push('webgl max vertex uniform vectors:' + gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS));
-    result.push('webgl max viewport dims:' + fa2s(gl.getParameter(gl.MAX_VIEWPORT_DIMS)));
-    result.push('webgl red bits:' + gl.getParameter(gl.RED_BITS));
-    result.push('webgl renderer:' + gl.getParameter(gl.RENDERER));
-    result.push('webgl shading language version:' + gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
-    result.push('webgl stencil bits:' + gl.getParameter(gl.STENCIL_BITS));
-    result.push('webgl vendor:' + gl.getParameter(gl.VENDOR));
-    result.push('webgl version:' + gl.getParameter(gl.VERSION));
+    result.push({ key: 'extensions:', value: (gl.getSupportedExtensions() || []) });
+    result.push({ key: 'aliased line width range', value: fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)) });
+    result.push({ key: 'aliased point size range:', value: fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)) });
+    result.push({ key: 'alpha bits:', value: gl.getParameter(gl.ALPHA_BITS) });
+    result.push({ key: 'antialiasing:', value: (gl.getContextAttributes().antialias ? 'yes' : 'no') });
+    result.push({ key: 'blue bits:', value: gl.getParameter(gl.BLUE_BITS) });
+    result.push({ key: 'depth bits:', value: gl.getParameter(gl.DEPTH_BITS) });
+    result.push({ key: 'green bits:', value: gl.getParameter(gl.GREEN_BITS) });
+    result.push({ key: 'max anisotropy:', value: maxAnisotropy(gl) });
+    result.push({ key: 'max combined texture image units:', value: gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS) });
+    result.push({ key: 'max cube map texture size:', value: gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE) });
+    result.push({ key: 'max fragment uniform vectors:', value: gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS) });
+    result.push({ key: 'max render buffer size:', value: gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) });
+    result.push({ key: 'max texture image units:', value: gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS) });
+    result.push({ key: 'max texture size:', value: gl.getParameter(gl.MAX_TEXTURE_SIZE) });
+    result.push({ key: 'max varying vectors:', value: gl.getParameter(gl.MAX_VARYING_VECTORS) });
+    result.push({ key: 'max vertex attribs:', value: gl.getParameter(gl.MAX_VERTEX_ATTRIBS) });
+    result.push({ key: 'max vertex texture image units:', value: gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) });
+    result.push({ key: 'max vertex uniform vectors:', value: gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS) });
+    result.push({ key: 'max viewport dims:', value: fa2s(gl.getParameter(gl.MAX_VIEWPORT_DIMS)) });
+    result.push({ key: 'red bits:', value: gl.getParameter(gl.RED_BITS) });
+    result.push({ key: 'renderer:', value: gl.getParameter(gl.RENDERER) });
+    result.push({ key: 'shading language version:', value: gl.getParameter(gl.SHADING_LANGUAGE_VERSION) });
+    result.push({ key: 'stencil bits:', value: gl.getParameter(gl.STENCIL_BITS) });
+    result.push({ key: 'vendor:', value: gl.getParameter(gl.VENDOR) });
+    result.push({ key: 'version:', value: gl.getParameter(gl.VERSION) });
 
     try {
       // Add the unmasked vendor and unmasked renderer if the debug_renderer_info extension is available
       var extensionDebugRendererInfo = gl.getExtension('WEBGL_debug_renderer_info');
       if (extensionDebugRendererInfo) {
-        result.push('webgl unmasked vendor:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL));
-        result.push('webgl unmasked renderer:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL));
+        result.push({ key: 'unmasked vendor:', value: gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL) });
+        result.push({ key: 'unmasked renderer:', value: gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL) });
       }
     } catch (e) { ; }
 
@@ -642,8 +642,8 @@ export function Linger() {
             if (key !== 'precision') {
               key = 'precision ' + key;
             }
-            var line = ['webgl ', shader.toLowerCase(), ' shader ', numSize.toLowerCase(), ' ', numType.toLowerCase(), ' ', key, ':', format].join('');
-            result.push(line)
+            var line = [shader.toLowerCase(), ' shader ', numSize.toLowerCase(), ' ', numType.toLowerCase(), ' ', key].join('');
+            result.push({ key: line, value: format });
           })
         })
       })

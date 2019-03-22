@@ -2,7 +2,7 @@
 
 ## Testing
 
-We should test things,  feel free to do that.
+Testing to this point has been conducted on major browsers, by hand.  Automated testing would be greatly appreciated.
 
 ## Submitting changes
 

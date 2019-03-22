@@ -1,10 +1,10 @@
 {
-  "name": "lingerprint",
+  "name": "@barkleyrei/lingerprint",
   "version": "1.1.0",
   "description": "A drop-in API for creating a pseudo-unique browser fingerprint for lightweight visitor analytics.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BarkleyREI/lingerprint.git"
+    "url": "git+https://github.com/BarkleyREI/lingerprint.git"
   },
   "keywords": [
     "analytics",
@@ -28,6 +28,7 @@
     "release": "webpack --config config/webpack.prod.config.js --progress --mode production --env.PLATFORM=production --env.VERSION=production --display-error-details",
     "watch": "webpack --config config/webpack.base.config.js --progress --mode development --env.PLATFORM=local --env.VERSION=dev --watch"
   },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/plugin-proposal-class-properties": "^7.4.0",

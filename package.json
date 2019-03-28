@@ -1,18 +1,24 @@
 {
-  "name": "lingerprint",
-  "version": "1.0.2",
+  "name": "@barkleyrei/lingerprint",
+  "version": "1.1.0",
   "description": "A drop-in API for creating a pseudo-unique browser fingerprint for lightweight visitor analytics.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/risadams/lingerprint.git"
+    "url": "git+https://github.com/BarkleyREI/lingerprint.git"
   },
-  "keywords": [],
-  "author": "Ris Adams",
+  "keywords": [
+    "analytics",
+    "tracking",
+    "javascript",
+    "browser",
+    "fingerprinting"
+  ],
+  "author": "BarkleyREI | Ris Adams",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/risadams/lingerprint/issues"
+    "url": "https://github.com/BarkleyREI/lingerprint/issues"
   },
-  "homepage": "https://github.com/risadams/lingerprint",
+  "homepage": "https://github.com/BarkleyREI/lingerprint",
   "main": "",
   "files": [
     "dist/lingerprint.js"
@@ -22,14 +28,15 @@
     "release": "webpack --config config/webpack.prod.config.js --progress --mode production --env.PLATFORM=production --env.VERSION=production --display-error-details",
     "watch": "webpack --config config/webpack.base.config.js --progress --mode development --env.PLATFORM=local --env.VERSION=dev --watch"
   },
+  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
     "@babel/plugin-proposal-throw-expressions": "^7.2.0",
     "@babel/plugin-syntax-dynamic-import": "~7.2.0",
-    "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.3.4",
+    "@babel/polyfill": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
     "babel-loader": "^8.0.5",
     "eslint": "^5.15.3",
     "eslint-config-airbnb": "^17.1.0",

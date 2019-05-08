@@ -2,7 +2,7 @@ import * as murmor3 from './murmor_hash';
 import { each, map, spelunkObject } from './utils';
 
 export function Lingerprint() {
-  const MODULE_VERSION = '1.1.0';
+  const MODULE_VERSION = '1.2.0';
   const Fingerprinter = class Fingerprinter {
 
     constructor(options) {
@@ -108,7 +108,7 @@ export function Lingerprint() {
     enumerateDevices = function (processValue, options) {
       options = options || this.options;
       if (!this.deviceEnumerationSupported()) {
-        return processValue(option.MSG_NOT_AVAILABLE);
+        return processValue(options.MSG_NOT_AVAILABLE);
       }
       navigator.mediaDevices.enumerateDevices().then(function (devices) {
         processValue(devices.map(function (device) {

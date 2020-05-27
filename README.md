@@ -2,6 +2,8 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8fe05c390a2f4415865527c48465e61e)](https://www.codacy.com/app/risadams/lingerprintjs)
 
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=risadams/lingerprint)](https://dependabot.com)
+
 lingerprint is a Javascript library that will examine a browser and build a visitor fingerprint.
 This will not include any personally identifiable information, while this can be used to uniquely identify a browser--it cannot identify individual users that may be using multiple browsers.
 

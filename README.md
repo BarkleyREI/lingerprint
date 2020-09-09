@@ -1,7 +1,7 @@
 # Lingerprint
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Dire-Hope/community)
-![Node.js CI](https://github.com/risadams/lingerprintjs/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/risadams/lingerprint/workflows/Node.js%20CI/badge.svg)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8fe05c390a2f4415865527c48465e61e)](https://www.codacy.com/app/risadams/lingerprintjs)
 

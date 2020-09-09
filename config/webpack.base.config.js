@@ -1,7 +1,7 @@
 /* eslint-disable */
 const path = require('path');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 const SRC_DIR = path.resolve(__dirname, '../src');
 const DST_DIR = path.resolve(__dirname, '../dist');
